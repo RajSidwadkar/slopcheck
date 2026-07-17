@@ -1,0 +1,1 @@
+## Slopcheck - AI Writing Detector

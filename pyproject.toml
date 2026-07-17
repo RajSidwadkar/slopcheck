@@ -1,13 +1,14 @@
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "slopcheck"
 version = "0.1.0"
-description = "A zero-dependency AI-writing signature detector tool"
+description = "Zero-GPU, zero-API heuristic AI-writing detector"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "MIT"}
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -17,16 +18,16 @@ dependencies = []
 [project.scripts]
 slopcheck = "slopcheck.cli:main"
 
-[tool.setuptools]
-include-package-data = true
-
-[tool.setuptools.packages.find]
-include = ["slopcheck", "slopcheck.*"]
-exclude = ["data*", "tests*", ".github*"]
-
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "ruff>=0.3.0",
 ]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["slopcheck", "slopcheck.*"]
+exclude = ["data*", "tests*", ".github*"]
