@@ -1,0 +1,5 @@
+Hey Sarah,
+Quick question on the design doc you shared yesterday. On page 3, you mentioned we might need to support offline mode by Q4. Is that a hard requirement from product, or is it more of a nice-to-have? Just want to make sure I don't over-engineer the database schema early on.
+Let me know when you have a second to chat.
+Thanks,
+Dave

@@ -1,0 +1,1 @@
+Thanks for the updates! The logic looks correct now, and the unit tests you added cover the edge cases nicely. I have one minor suggestion: in connection.py, we could use a context manager to ensure the socket is always closed, even if an exception occurs mid-flight. Other than that, looks ready to merge.
