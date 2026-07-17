@@ -1,0 +1,82 @@
+import os
+import sys
+
+# Ensure project root is in python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+import pytest
+from slopcheck.signals.phrases import load_phrase_bank, score_phrases
+
+@pytest.fixture
+def phrase_bank():
+    # Use absolute or relative path to data/phrase_bank.json
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    json_path = os.path.join(base_dir, "data", "phrase_bank.json")
+    return load_phrase_bank(json_path)
+
+def test_load_phrase_bank(phrase_bank):
+    assert isinstance(phrase_bank, dict)
+    assert len(phrase_bank) >= 80 and len(phrase_bank) <= 120
+    for phrase, weight in phrase_bank.items():
+        assert isinstance(phrase, str)
+        assert isinstance(weight, int)
+        assert 1 <= weight <= 5
+
+def test_score_phrases_empty_input(phrase_bank):
+    score, matches = score_phrases("", phrase_bank)
+    assert score == 0.0
+    assert matches == []
+
+    score, matches = score_phrases("   \n  \t ", phrase_bank)
+    assert score == 0.0
+    assert matches == []
+
+def test_score_phrases_basic(phrase_bank):
+    text = "Moreover, we must navigate the complexities of this groundbreaking issue in today's fast-paced world."
+    # Word count: 14
+    score, matches = score_phrases(text, phrase_bank)
+    
+    assert score > 0.0
+    # The score should be capped at 40
+    assert score <= 40.0
+    
+    matched_phrases = {m["phrase"] for m in matches}
+    assert "moreover" in matched_phrases
+    assert "navigate the complexities" in matched_phrases
+    assert "groundbreaking" in matched_phrases
+    assert "in today's fast-paced world" in matched_phrases
+
+    # Check match structure
+    for m in matches:
+        assert "phrase" in m
+        assert "weight" in m
+        assert "position" in m
+        assert "context_snippet" in m
+        assert isinstance(m["phrase"], str)
+        assert isinstance(m["weight"], int)
+        assert isinstance(m["position"], int)
+        assert isinstance(m["context_snippet"], str)
+        # Context snippet should contain the matched text
+        assert text[m["position"] : m["position"] + len(text)].startswith(text[m["position"] : m["position"] + 5])
+
+def test_overlap_resolution(phrase_bank):
+    # "pushing the boundaries" (weight 4) contains "boundaries" (weight 2)
+    # The resolver should only select the longer match
+    text = "We are constantly pushing the boundaries of what is possible."
+    score, matches = score_phrases(text, phrase_bank)
+    
+    matched_phrases = {m["phrase"] for m in matches}
+    assert "pushing the boundaries" in matched_phrases
+    assert "boundaries" not in matched_phrases
+
+def test_construction_matching(phrase_bank):
+    text = "It's not just a tool, it's a partner in our journey of discovery."
+    score, matches = score_phrases(text, phrase_bank)
+    
+    matched_phrases = {m["phrase"] for m in matches}
+    # Check that it matched the construction pattern
+    assert any("not just" in p for p in matched_phrases)
+    # Check that "journey of" also matched because X/Y are non-greedy and don't overlap
+    assert "journey of" in matched_phrases
