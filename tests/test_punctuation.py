@@ -109,3 +109,19 @@ def test_score_punctuation_intermediate():
     
     score, info = score_punctuation(text)
     assert abs(score - 7.5) < 1e-5
+
+def test_score_punctuation_ai_vs_human():
+    ai_text = (
+        "Moreover, we must delve into the multifaceted complexities of today's fast-paced world: it is changing fast. "
+        "Furthermore, it stands as a testament to the transformative power of cutting-edge technology (which is great). "
+        "Additionally, we should foster innovation to unlock the potential of these tools -- they are useful."
+    )
+    human_text = (
+        "The cat sat on the mat. The dog sat on the mat. The cat and the dog both sat on the mat."
+    )
+    ai_score, _ = score_punctuation(ai_text)
+    human_score, _ = score_punctuation(human_text)
+    assert ai_score > human_score
+    assert ai_score > 10.0
+    assert human_score == 0.0
+

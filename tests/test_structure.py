@@ -74,3 +74,24 @@ def test_score_structure_intermediate():
     assert abs(info["stdev"] - 9.89949493) < 1e-5
     # score = 15.0 * (20.0 - 9.89949493) / 20.0 = 7.5753788
     assert abs(score - 7.5753788) < 1e-5
+
+def test_score_structure_ai_vs_human():
+    # AI-like writing with perfectly uniform paragraph lengths (each paragraph has exactly 5 words)
+    ai_text = (
+        "This is paragraph number one.\n\n"
+        "This is paragraph number two.\n\n"
+        "This is paragraph number three."
+    )
+    # Human-like writing with highly variable paragraph lengths (lengths: 2, 40)
+    human_text = (
+        "First paragraph.\n\n"
+        "Here is a second paragraph that is going to be extremely long and highly detailed, "
+        "consisting of many words so that the standard deviation between the two paragraphs "
+        "is extremely high and easily exceeds the twenty word threshold, resulting in a zero structure score."
+    )
+    ai_score, _ = score_structure(ai_text)
+    human_score, _ = score_structure(human_text)
+    assert ai_score > human_score
+    assert ai_score == 15.0
+    assert human_score == 0.0
+

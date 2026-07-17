@@ -90,3 +90,63 @@ def test_print_report_with_color(sample_result, capsys):
     assert "\033[" in output
     # Specifically check for Red code (\033[31m) for high risk
     assert "\033[31m" in output
+
+def test_render_empty_input(capsys):
+    from slopcheck.scorer import analyze
+    empty_result = analyze("")
+    
+    # Test print_json
+    print_json(empty_result)
+    captured_json = capsys.readouterr()
+    assert "total_score" in captured_json.out
+    
+    # Test print_report
+    print_report(empty_result, explain=True, color=False)
+    captured_report = capsys.readouterr()
+    assert "Score: 0/100" in captured_report.out
+
+def test_render_ai_vs_human(capsys):
+    from slopcheck.scorer import analyze
+    ai_text = (
+        "Moreover, we must delve into the multifaceted complexities of today's fast-paced world: it is changing fast. "
+        "Furthermore, it stands as a testament to the transformative power of cutting-edge technology (which is great). "
+        "Additionally, we should foster innovation to unlock the potential of these tools -- they are useful."
+    )
+    human_text = (
+        "The cat sat on the mat. The dog sat on the mat. The cat and the dog both sat on the mat."
+    )
+    
+    ai_res = analyze(ai_text)
+    human_res = analyze(human_text)
+    
+    print_report(ai_res, explain=False, color=False)
+    ai_out = capsys.readouterr().out
+    
+    print_report(human_res, explain=False, color=False)
+    human_out = capsys.readouterr().out
+    
+    # Find the scores in the reports
+    # AI report should print a high score
+    assert "Score:" in ai_out
+    assert "Score:" in human_out
+    
+    # Simple extraction of score numbers
+    import re
+    ai_score_val = float(re.search(r"Score:\s+(\d+)/100", ai_out).group(1))
+    human_score_val = float(re.search(r"Score:\s+(\d+)/100", human_out).group(1))
+    
+    assert ai_score_val > human_score_val
+
+def test_print_report_encoding_error(sample_result):
+    from unittest.mock import patch, MagicMock
+    mock_stdout = MagicMock()
+    mock_stdout.encoding = "ascii"
+    mock_stdout.write = MagicMock()
+    
+    with patch("sys.stdout", mock_stdout):
+        print_report(sample_result, explain=False, color=False)
+        
+    written = "".join(call[0][0] for call in mock_stdout.write.call_args_list)
+    assert "[!]" in written
+
+
