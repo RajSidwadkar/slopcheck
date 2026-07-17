@@ -60,6 +60,8 @@ def main() -> None:
     # Perform composite analysis
     try:
         result = analyze(text)
+        result["_text"] = text
+        result["_filename"] = "stdin" if args.file == "-" else args.file
     except Exception as e:
         sys.stderr.write(f"Error during analysis: {e}\n")
         sys.exit(2)
@@ -73,7 +75,7 @@ def main() -> None:
     if args.json:
         render.print_json(result)
     else:
-        render.print_report(result, text=text, explain=args.explain, color=color)
+        render.print_report(result, explain=args.explain, color=color)
 
     # Determine exit code based on the risk band
     if result.get("risk_band") == "high":
