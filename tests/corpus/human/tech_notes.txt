@@ -1,0 +1,3 @@
+Database query optimization notes:
+The user lookup query is taking up to 800ms during peak hours. Ran EXPLAIN and found it's doing a full table scan on the email column because we forgot to add a unique index there.
+Added the index concurrently this morning. Checked the query log after deploy and response times dropped to under 15ms. Need to double check other tables for missing indices next week.

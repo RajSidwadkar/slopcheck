@@ -1,0 +1,2 @@
+Spent three hours tracking down a memory leak. Turned out to be a global list in the caching module that wasn't clearing old entries. The cache keys kept growing indefinitely because we weren't enforcing the max size limit properly.
+Fixed it by replacing the simple dict with an OrderedDict and popping the oldest item when the length exceeds 500. Ran a load test and memory usage is completely flat now.
