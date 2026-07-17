@@ -23,3 +23,10 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["slopcheck", "slopcheck.*"]
 exclude = ["data*", "tests*", ".github*"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.3.0",
+]
