@@ -32,8 +32,8 @@ def test_cli_read_from_file(tmp_path, capsys):
         assert excinfo.value.code == 0
         
         captured = capsys.readouterr()
-        assert "Slopcheck Analysis Report" in captured.out
-        assert "Total Score" in captured.out
+        assert "slopcheck: " in captured.out
+        assert "Score: " in captured.out
 
 
 def test_cli_read_from_stdin(capsys):
@@ -46,7 +46,7 @@ def test_cli_read_from_stdin(capsys):
             assert excinfo.value.code == 0
             
             captured = capsys.readouterr()
-            assert "Slopcheck Analysis Report" in captured.out
+            assert "slopcheck: stdin" in captured.out
 
 
 def test_cli_json_output(tmp_path, capsys):
@@ -77,8 +77,8 @@ def test_cli_explain_output(tmp_path, capsys):
         assert excinfo.value.code == 0
         
         captured = capsys.readouterr()
-        assert "Matched AI-Writing Phrases:" in captured.out
-        assert "Line 1" in captured.out
+        assert "Flagged spans:" in captured.out
+        assert "L1:" in captured.out
 
 
 def test_cli_high_risk_exit_code(tmp_path):

@@ -9,31 +9,30 @@ def print_json(result: dict[str, Any]) -> None:
     Args:
         result: The analysis result dictionary from scorer.analyze().
     """
-    print(json.dumps(result, indent=2))
+    # Create a copy without the internal metadata keys
+    clean_result = {k: v for k, v in result.items() if not k.startswith("_")}
+    print(json.dumps(clean_result, indent=2))
 
 
-def print_report(
-    result: dict[str, Any],
-    text: str = "",
-    explain: bool = False,
-    color: bool = True,
-) -> None:
+def print_report(result: dict[str, Any], explain: bool = False, color: bool = True) -> None:
     """
-    Print a user-friendly colored report of the analysis results to stdout.
+    Print a user-friendly report of the analysis results to stdout.
     
     Args:
         result: The analysis result dictionary from scorer.analyze().
-        text: The original text analyzed, used to calculate match line numbers.
         explain: If True, include details of each matched phrase with line numbers.
         color: If True, utilize ANSI escape codes to colorize output.
     """
-    # ANSI color and styling escape codes
-    GREEN = "\033[92m" if color else ""
-    YELLOW = "\033[93m" if color else ""
-    RED = "\033[91m" if color else ""
+    # ANSI color codes
+    GREEN = "\033[32m" if color else ""
+    YELLOW = "\033[33m" if color else ""
+    RED = "\033[31m" if color else ""
     RESET = "\033[0m" if color else ""
     BOLD = "\033[1m" if color else ""
-    CYAN = "\033[96m" if color else ""
+
+    # Extract metadata added by cli.py
+    filename = result.get("_filename", "<unknown>")
+    text = result.get("_text", "")
 
     total_score = result["total_score"]
     risk_band = result["risk_band"]
@@ -46,40 +45,35 @@ def print_report(
     else:
         band_color = RED
 
-    print(f"{BOLD}Slopcheck Analysis Report{RESET}")
-    print("=========================")
-    print(f"Total Score: {band_color}{total_score:.1f}/100{RESET} ({band_color}{risk_band.upper()} RISK{RESET})")
-    print()
-    print(f"{BOLD}Signals Summary:{RESET}")
-    
-    signals = result["signals"]
-    for name, data in signals.items():
-        score = data["score"]
-        
-        # Look up correct maximum scale for each signal type
-        max_score = 0
-        if name == "phrases":
-            max_score = 40
-        elif name == "rhythm":
-            max_score = 20
-        elif name in ("punctuation", "structure"):
-            max_score = 15
-        elif name == "lexical":
-            max_score = 10
-            
-        print(f"  - {name.capitalize():<12}: {score:>5.1f} / {max_score}")
+    rounded_score = int(round(total_score))
 
+    # Print Header and Score
+    print(f"slopcheck: {filename}")
+    print(f"Score: {band_color}{rounded_score}/100{RESET}  ({band_color}{risk_band} AI-signal density{RESET})")
+    print()
+
+    # Print Signals breakdown (aligned perfectly)
+    signals = result["signals"]
+    phrase_score = signals["phrases"]["score"]
+    rhythm_score = signals["rhythm"]["score"]
+    punctuation_score = signals["punctuation"]["score"]
+    structure_score = signals["structure"]["score"]
+    lexical_score = signals["lexical"]["score"]
+
+    print(f"  Phrase matches        {int(round(phrase_score)):>2}/40")
+    print(f"  Sentence rhythm       {int(round(rhythm_score)):>2}/20")
+    print(f"  Punctuation           {int(round(punctuation_score)):>2}/15")
+    print(f"  Paragraph uniformity  {int(round(structure_score)):>2}/15")
+    print(f"  Lexical diversity     {int(round(lexical_score)):>2}/10")
+
+    # Print explanation if requested
     if explain and "phrases" in signals:
         matches = signals["phrases"]["matches"]
         if matches:
             print()
-            print(f"{BOLD}Matched AI-Writing Phrases:{RESET}")
-            print("---------------------------")
-            
+            print("Flagged spans:")
             for m in matches:
                 pos = m["position"]
-                phrase = m["phrase"]
-                weight = m["weight"]
                 snippet = m["context_snippet"].replace("\n", " ")
                 
                 # Compute line number from char position
@@ -87,8 +81,9 @@ def print_report(
                 if text:
                     line_no = text[:pos].count("\n") + 1
                     
-                print(f"  Line {line_no:<4} | Phrase: {RED}{phrase:<25}{RESET} (Weight: {weight})")
-                print(f"            Context: \"...{CYAN}{snippet}{RESET}...\"")
-        else:
-            print()
-            print("No matching AI-writing phrases detected.")
+                print(f"    L{line_no}: \"...{snippet}...\"")
+
+    # Print Warning/Disclaimer
+    print()
+    print("  ⚠ Heuristic estimate, not proof. False positives common in formal/corporate writing")
+    print("    and non-native English styles.")
