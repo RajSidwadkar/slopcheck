@@ -47,14 +47,26 @@ def test_risk_bands():
     assert res_low["risk_band"] == "low"
 
     # High score (force high scores across all indicators)
-    # 1. Phrases: moreover, navigate the complexities, stands as a testament to, in today's fast-paced world, in conclusion
-    # 2. Rhythm: identical short sentences -> CV=0 -> score 20
-    # 3. Punctuation: colons, parentheses, em-dashes -> score 15
-    # 4. Structure: 2 identical paragraph lengths -> stdev=0 -> score 15
-    # 5. Lexical: TTR=1 -> score 10
     high_text = (
         "Moreover: we must navigate the complexities (of life).\n\n"
         "Furthermore: it stands as a testament (to that)."
     )
     res_high = analyze(high_text)
     assert res_high["total_score"] >= 35.0  # Should be medium or high
+
+def test_analyze_ai_vs_human():
+    fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures")
+    with open(os.path.join(fixtures_dir, "sample_ai.txt"), "r", encoding="utf-8") as f:
+        ai_text = f.read()
+    with open(os.path.join(fixtures_dir, "sample_human.txt"), "r", encoding="utf-8") as f:
+        human_text = f.read()
+        
+    ai_result = analyze(ai_text)
+    human_result = analyze(human_text)
+    
+    assert ai_result["total_score"] > human_result["total_score"]
+    assert ai_result["total_score"] > 80.0
+    assert human_result["total_score"] < 20.0
+    assert ai_result["risk_band"] == "high"
+    assert human_result["risk_band"] == "low"
+

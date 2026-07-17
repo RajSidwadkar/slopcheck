@@ -80,3 +80,29 @@ def test_construction_matching(phrase_bank):
     assert any("not just" in p for p in matched_phrases)
     # Check that "journey of" also matched because X/Y are non-greedy and don't overlap
     assert "journey of" in matched_phrases
+
+def test_score_phrases_ai_vs_human(phrase_bank):
+    ai_text = (
+        "Moreover, we must delve into the multifaceted complexities of today's fast-paced world: it is changing fast. "
+        "Furthermore, it stands as a testament to the transformative power of cutting-edge technology (which is great). "
+        "Additionally, we should foster innovation to unlock the potential of these tools -- they are useful."
+    )
+    human_text = (
+        "The cat sat on the mat. The dog sat on the mat. The cat and the dog both sat on the mat."
+    )
+    ai_score, _ = score_phrases(ai_text, phrase_bank)
+    human_score, _ = score_phrases(human_text, phrase_bank)
+    assert ai_score > human_score
+    assert ai_score > 10.0
+    assert human_score == 0.0
+
+def test_load_phrase_bank_invalid(tmp_path):
+    import json
+    invalid_file = tmp_path / "invalid_phrase_bank.json"
+    invalid_file.write_text(json.dumps([1, 2, 3]))
+    
+    with pytest.raises(ValueError) as excinfo:
+        load_phrase_bank(str(invalid_file))
+    assert "Phrase bank must be a JSON object" in str(excinfo.value)
+
+

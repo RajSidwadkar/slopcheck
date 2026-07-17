@@ -80,3 +80,19 @@ def test_score_rhythm_interpolation():
     score, info = score_rhythm(text)
     assert abs(info["cv"] - 0.5) < 1e-5
     assert abs(score - 10.0) < 1e-5
+
+def test_score_rhythm_ai_vs_human():
+    # AI-like writing with perfectly uniform sentence lengths (each sentence has exactly 5 words)
+    ai_text = (
+        "This is a first sentence. That is a second sentence. Here is a third sentence."
+    )
+    # Human-like writing with highly variable sentence lengths (lengths: 2, 10, 1)
+    human_text = (
+        "Watch out! I am writing a paragraph with very uneven sentences. Yes."
+    )
+    ai_score, _ = score_rhythm(ai_text)
+    human_score, _ = score_rhythm(human_text)
+    assert ai_score > human_score
+    assert ai_score == 20.0
+    assert human_score == 0.0
+
