@@ -1,6 +1,5 @@
 import argparse
 import sys
-from typing import Any
 
 from slopcheck import render
 from slopcheck.scorer import analyze

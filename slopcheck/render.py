@@ -28,7 +28,6 @@ def print_report(result: dict[str, Any], explain: bool = False, color: bool = Tr
     YELLOW = "\033[33m" if color else ""
     RED = "\033[31m" if color else ""
     RESET = "\033[0m" if color else ""
-    BOLD = "\033[1m" if color else ""
 
     # Extract metadata added by cli.py
     filename = result.get("_filename", "<unknown>")

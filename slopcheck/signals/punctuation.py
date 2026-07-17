@@ -1,4 +1,3 @@
-import re
 from typing import Any
 from slopcheck.signals.rhythm import split_sentences
 

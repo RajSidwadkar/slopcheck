@@ -1,12 +1,3 @@
-import os
-import sys
-
-# Ensure project root is in python path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-import pytest
 from slopcheck.signals.rhythm import split_sentences, score_rhythm
 
 def test_split_sentences_basic():

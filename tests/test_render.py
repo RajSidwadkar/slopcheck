@@ -1,13 +1,6 @@
-import os
-import sys
 import json
-
-# Ensure project root is in python path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
 import pytest
+
 from slopcheck.render import print_json, print_report
 
 @pytest.fixture
