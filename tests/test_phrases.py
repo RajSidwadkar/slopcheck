@@ -1,4 +1,3 @@
-import os
 
 import pytest
 from slopcheck.signals.phrases import load_phrase_bank, score_phrases
