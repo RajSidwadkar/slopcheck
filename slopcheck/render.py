@@ -83,7 +83,15 @@ def print_report(result: dict[str, Any], explain: bool = False, color: bool = Tr
                     
                 print(f"    L{line_no}: \"...{snippet}...\"")
 
-    # Print Warning/Disclaimer
+    # Print Warning/Disclaimer safely (using fallback symbol if encoding does not support unicode)
+    import sys
+    warning_symbol = "⚠"
+    try:
+        # Check if the terminal encoding can handle the Unicode character
+        warning_symbol.encode(sys.stdout.encoding or "utf-8")
+    except Exception:
+        warning_symbol = "[!]"
+
     print()
-    print("  ⚠ Heuristic estimate, not proof. False positives common in formal/corporate writing")
+    print(f"  {warning_symbol} Heuristic estimate, not proof. False positives common in formal/corporate writing")
     print("    and non-native English styles.")
