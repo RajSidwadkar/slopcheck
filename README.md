@@ -1,18 +1,18 @@
 <div align="center">
 
-```
-        .--""--.
-       /  o  o  \      "I sniff. I score. I judge your prose."
-      |    ∧∧    |
-       \  ‾‾‾‾  /       ╔═══════════════════════════╗
-        '.____.'        ║   S L O P C H E C K       ║
-       /|      |\       ╚═══════════════════════════╝
-      ^ |      | ^
+```text
+   .--""--.
+  /  o  o  \      "I sniff. I score. I judge your prose."
+ |    ^^    |
+  \  ------ /     +---------------------------+
+   '.____.'       |      S L O P C H E C K    |
+  /|      |\      +---------------------------+
+ ^ |      | ^
 ```
 
 **Meet Sniffy**, SlopCheck's official mascot and resident AI-prose bloodhound 🐾
 
-# 🧠 SlopCheck
+#  SlopCheck
 
 ### *Zero GPU. Zero API keys. Zero mercy for "delving into a multifaceted journey."*
 
@@ -26,7 +26,7 @@
 
 ---
 
-## 🩻 What is this thing?
+##  What is this thing?
 
 Your writing sounds like it was "delving" into a "tapestry" of "multifaceted" ideas and "testament"-ing its way to a conclusion? **SlopCheck knows.**
 
@@ -34,16 +34,16 @@ It's a fully offline, zero-dependency AI-prose detector that reads your text the
 
 No GPU. No API key. No cloud. No excuses.
 
-## ⚡ Why developers actually like it
+##  Why developers actually like it
 
-| 😩 The Old Way | 🐾 The SlopCheck Way |
+|  The Old Way |  The SlopCheck Way |
 |---|---|
 | Pay for a cloud "AI detector" | Runs 100% on your CPU, offline |
 | Wait on network round-trips | Instant, local, stdlib-only |
 | Black-box "trust me" score | 5 transparent heuristic signals |
 | Manual review before merge | Drop it in your CI, block the slop |
 
-## 🚀 Get it running (30 seconds, we timed it)
+##  Get it running (30 seconds, we timed it)
 
 ```bash
 pip install slopcheck
@@ -61,7 +61,7 @@ Or pipe anything into its mouth:
 echo "delving into multifaceted layers" | slopcheck -
 ```
 
-### 🔍 Sample verdict
+###  Sample verdict
 
 ```
 slopcheck: stdin
@@ -76,11 +76,11 @@ Lexical diversity        5/10
 Flagged spans:
   L1: "...delving into this multifaceted ecosystem..."
 
-⚠️  Heuristic estimate, not proof. False positives happen
+  Heuristic estimate, not proof. False positives happen
     on formal/corporate writing and non-native English styles.
 ```
 
-## 🧬 How Sniffy actually smells the slop
+##  How Sniffy actually smells the slop
 
 Five independent signals, no ML, no black box:
 
@@ -90,7 +90,7 @@ Five independent signals, no ML, no black box:
 - **📐 Paragraph uniformity**: every paragraph exactly the same size? Suspicious.
 - **🔤 Lexical diversity**: Type-Token Ratio checks if your vocabulary is actually alive
 
-## 🛠️ CLI cheat sheet
+##  CLI cheat sheet
 
 ```bash
 slopcheck <file|->     # target file, or "-" for stdin
@@ -99,7 +99,7 @@ slopcheck <file|->     # target file, or "-" for stdin
   --no-color              # for your soulless CI logs
 ```
 
-## 🤖 Use it as a library too
+##  Use it as a library too
 
 ```python
 from slopcheck import scorer
@@ -108,7 +108,7 @@ result = scorer.score("Text to evaluate")
 print(result.score, result.signals)
 ```
 
-## 🏗️ CI gatekeeper mode
+##  CI gatekeeper mode
 
 SlopCheck exits with code `1` on high-risk documents, so wire it straight into pre-commit or CI and let Sniffy guard the gate.
 
@@ -117,7 +117,7 @@ SlopCheck exits with code `1` on high-risk documents, so wire it straight into p
   run: slopcheck docs/*.md --no-color
 ```
 
-## 📁 Under the hood
+##  Under the hood
 
 ```
 slopcheck/
@@ -133,11 +133,11 @@ slopcheck/
 └── data/phrase_bank.json    → the naughty-phrase database
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 Found new slop in the wild? Sniffy accepts submissions. See `CONTRIBUTING.md`.
 
-## 📜 License
+##  License
 
 MIT: free as in "delving into the multifaceted world of open source."
 

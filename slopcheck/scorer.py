@@ -1,4 +1,3 @@
-import os
 from importlib import resources
 from typing import Any
 from pathlib import Path

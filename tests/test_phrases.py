@@ -5,10 +5,9 @@ from slopcheck.signals.phrases import load_phrase_bank, score_phrases
 
 @pytest.fixture
 def phrase_bank():
-    # Use absolute or relative path to data/phrase_bank.json
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    json_path = os.path.join(base_dir, "data", "phrase_bank.json")
-    return load_phrase_bank(json_path)
+    
+    from slopcheck.scorer import DEFAULT_PHRASE_BANK_PATH
+    return load_phrase_bank(DEFAULT_PHRASE_BANK_PATH)
 
 def test_load_phrase_bank(phrase_bank):
     assert isinstance(phrase_bank, dict)
