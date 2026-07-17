@@ -1,18 +1,6 @@
 <div align="center">
 
-```text
-   .--""--.
-  /  o  o  \      "I sniff. I score. I judge your prose."
- |    ^^    |
-  \  ------ /     +---------------------------+
-   '.____.'       |      S L O P C H E C K    |
-  /|      |\      +---------------------------+
- ^ |      | ^
-```
-
-**Meet Sniffy**, SlopCheck's official mascot and resident AI-prose bloodhound 🐾
-
-#  SlopCheck
+#  SlopCheck-CLI
 
 ### *Zero GPU. Zero API keys. Zero mercy for "delving into a multifaceted journey."*
 
@@ -46,7 +34,7 @@ No GPU. No API key. No cloud. No excuses.
 ##  Get it running (30 seconds, we timed it)
 
 ```bash
-pip install slopcheck
+pip install slopcheck-cli
 ```
 
 Point it at a file:
