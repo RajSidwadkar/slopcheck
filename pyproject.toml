@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "slopcheck"
-version = "0.1.0"
+version = "0.1.2"
 description = "Zero-GPU, zero-API heuristic AI-writing detector"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -30,4 +30,8 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 include = ["slopcheck", "slopcheck.*"]
-exclude = ["data*", "tests*", ".github*"]
+exclude = ["tests*", ".github*"]
+
+# ADD THIS SECTION: Tells setuptools to bundle any JSON files inside slopcheck
+[tool.setuptools.package-data]
+"slopcheck" = ["*.json", "**/*.json", "data/*.json"]

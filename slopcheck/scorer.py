@@ -1,6 +1,7 @@
 import os
 from importlib import resources
 from typing import Any
+from pathlib import Path
 
 from slopcheck.signals.phrases import load_phrase_bank, score_phrases
 from slopcheck.signals.rhythm import score_rhythm
@@ -8,17 +9,16 @@ from slopcheck.signals.punctuation import score_punctuation
 from slopcheck.signals.structure import score_structure
 from slopcheck.signals.lexical import score_lexical
 
-# Resolve the default phrase bank path relative to the package using importlib.resources
+# PERMANENT RESOLUTION: 
+# resources.files("slopcheck") points directly INSIDE the installed 'slopcheck' package.
+# Do NOT call .parent here, because that jumps out of the package into site-packages!
 try:
     pkg_path = resources.files("slopcheck")
-    DEFAULT_PHRASE_BANK_PATH = str(pkg_path.parent / "data" / "phrase_bank.json")
+    DEFAULT_PHRASE_BANK_PATH = str(pkg_path / "data" / "phrase_bank.json")
 except Exception:
-    # Fallback to file system path resolution relative to scorer.py location
-    DEFAULT_PHRASE_BANK_PATH = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "data",
-        "phrase_bank.json",
-    )
+    # Fallback for older python/local script running:
+    # Path(__file__).resolve().parent is guaranteed to be the 'slopcheck/' directory.
+    DEFAULT_PHRASE_BANK_PATH = str(Path(__file__).resolve().parent / "data" / "phrase_bank.json")
 
 
 def analyze(text: str, phrase_bank: dict[str, int] | None = None) -> dict[str, Any]:
