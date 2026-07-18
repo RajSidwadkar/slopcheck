@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](#)
 [![Python](https://img.shields.io/badge/python-3.10%2B-yellow?style=flat-square)](#)
 [![Deps](https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square)](#)
-[![Status](https://img.shields.io/badge/status-v0.1.0%20stable-success?style=flat-square)](#)
+[![Status](https://img.shields.io/badge/status-v0.1.4%20stable-success?style=flat-square)](#)
 
 </div>
 
